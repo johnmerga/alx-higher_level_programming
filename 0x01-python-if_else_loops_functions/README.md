@@ -2,7 +2,7 @@
 Project done during **Full Stack Software Engineering studies** at **Holberton School**. It aims to learn about if/else statements, loops, range and functions in **Python**.
 
 ## Technologies
-* Shell Scripts are written in Bash 4.3.11(1)
+
 * Python Scripts are written with Python 3.8
 * C files are compiled using `gcc 9.3.0`
 * Tested on Ubuntu 20.04 LTS

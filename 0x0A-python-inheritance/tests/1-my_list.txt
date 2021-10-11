@@ -1,113 +1,74 @@
-The ``1-my_list`` module
-============================
+# run test with python3 -m doctest -v ./tests/[filename].txt
 
-Using ``MyList``
----------------------
+First import method to test
+>>> MyList = __import__('1-my_list').MyList
 
-Importing function from the module:
-    >>> MyList = __import__('1-my_list').MyList
+SUCCESS CASES:
 
+Test ints (program assumes all elements will be type int):
+     >>> my_list = MyList()
+     >>> my_list.append(3)
+     >>> my_list.append(50)
+     >>> my_list.append(-1)
+     >>> print(my_list)
+     [3, 50, -1]
+     >>> my_list.print_sorted()
+     [-1, 3, 50]
+     >>> print(my_list)
+     [3, 50, -1]
 
-Printing a sorted list 1 (positive numbers)
-    >>> my_list = MyList()
-    >>> my_list += [0]
-    >>> my_list.append(4)
-    >>> my_list.append(1)
-    >>> my_list.append(10)
-    >>> my_list.append(3)
-    >>> my_list.append(7)
-    >>> my_list.print_sorted()
-    [0, 1, 3, 4, 7, 10]
+     >>> another_list = MyList()
+     >>> another_list.append(300)
+     >>> another_list.append(50)
+     >>> another_list.append(-1)
+     >>> print(another_list)
+     [300, 50, -1]
+     >>> another_list.print_sorted()
+     [-1, 50, 300]
+     >>> print(another_list)
+     [300, 50, -1]
 
+     >>> l = MyList()
+     >>> l.append(-300)
+     >>> l.append(50)
+     >>> l.append(-1)
+     >>> print(l)
+     [-300, 50, -1]
+     >>> id(l) is not id(l.print_sorted())
+     [-300, -1, 50]
+     True
 
-Printing a sorted list 2 (repeated numbers)
-    >>> my_list = MyList()
-    >>> my_list.append(1)
-    >>> my_list += [1]
-    >>> my_list.append(2)
-    >>> my_list.append(2)
-    >>> my_list += [2]
-    >>> my_list.print_sorted()
-    [1, 1, 2, 2, 2]
+Test list with only one element:
+     >>> solo = MyList()
+     >>> solo.append(-99999)
+     >>> print(solo)
+     [-99999]
+     >>> solo.print_sorted()
+     [-99999]
+     >>> print(solo)
+     [-99999]
 
+Test list with no elements:
+     >>> empty = MyList()
+     >>> print(empty)
+     []
+     >>> empty.print_sorted()
+     []
 
-Printing an sorted list 3 (one number)
-    >>> my_list = MyList()
-    >>> my_list += [3]
-    >>> my_list.print_sorted()
-    [3]
+Test type, isinstance, issubclass:
+     >>> type(MyList())
+     <class '1-my_list.MyList'>
 
+     >>> isinstance(MyList, object)
+     True
 
-Printing an sorted list 4 (positive and negative numbers)
-    >>> my_list = MyList()
-    >>> my_list.append(-5)
-    >>> my_list += [5]
-    >>> my_list += [4]
-    >>> my_list.append(0)
-    >>> my_list.append(-4)
-    >>> my_list.append(1)
-    >>> my_list += [-1]
-    >>> my_list.print_sorted()
-    [-5, -4, -1, 0, 1, 4, 5]
+     >>> isinstance(MyList, list)
+     False
 
+     >>> issubclass(MyList, list)
+     True
 
-Printing an empty list
-    >>> my_list = MyList()
-    >>> my_list.print_sorted()
-    []
+     >>> 'print_sorted' in dir(MyList)
+     True
 
-
-MyList is an instance of the class list
-    >>> my_list = MyList()
-    >>> isinstance(my_list, list)
-    True
-
-
-Instance has the correct type
-    >>> my_list = MyList()
-    >>> type(my_list) == MyList
-    True
-
-
-MyList is a subclass of list
-    >>> issubclass(MyList, list)
-    True
-
-
-Print_sorted method with 1 passed argument
-    >>> my_list = MyList()
-    >>> my_list.print_sorted([1, 2, 3])
-    Traceback (most recent call last):
-    	      ...
-    TypeError: print_sorted() takes 1 positional argument but 2 were given
-
-
-Print_sorted method with 2 passed arguments
-    >>> my_list = MyList()
-    >>> my_list.print_sorted([1, 2], [5, 4])
-    Traceback (most recent call last):
-    	      ...
-    TypeError: print_sorted() takes 1 positional argument but 3 were given
-
-
-Type of the print_sorted method
-    >>> my_list = MyList()
-    >>> type(my_list.print_sorted)
-    <class 'method'>
-
-
-Check printable string
-    >>> my_list = MyList()
-    >>> my_list.append(5)
-    >>> print(my_list)
-    [5]
-
-Check if print_sorted() returns a new list
-    >>> my_list = MyList()
-    >>> my_list.append(7)
-    >>> my_list.append(1)
-    >>> my_list.append(2)
-    >>> my_list.print_sorted()
-    [1, 2, 7]
-    >>> my_list
-    [7, 1, 2]
+FAIL CASES:

@@ -1,40 +1,54 @@
 #!/usr/bin/python3
-"""
-reads stdin line by line and computes metrics
-"""
-import sys
+''' script for processing requests logs '''
+import signal
+import re
 
-file_size = 0
-status_tally = {"200": 0, "301": 0, "400": 0, "401": 0,
-                "403": 0, "404": 0, "405": 0, "500": 0}
-i = 0
-try:
-    for line in sys.stdin:
-        tokens = line.split()
-        if len(tokens) >= 2:
-            a = i
-            if tokens[-2] in status_tally:
-                status_tally[tokens[-2]] += 1
-                i += 1
-            try:
-                file_size += int(tokens[-1])
-                if a == i:
-                    i += 1
-            except:
-                if a == i:
-                    continue
-        if i % 10 == 0:
-            print("File size: {:d}".format(file_size))
-            for key, value in sorted(status_tally.items()):
-                if value:
-                    print("{:s}: {:d}".format(key, value))
-    print("File size: {:d}".format(file_size))
-    for key, value in sorted(status_tally.items()):
-        if value:
-            print("{:s}: {:d}".format(key, value))
+count = 0
+status_codes = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
+total_file_size = 0
 
-except KeyboardInterrupt:
-    print("File size: {:d}".format(file_size))
-    for key, value in sorted(status_tally.items()):
-        if value:
-            print("{:s}: {:d}".format(key, value))
+
+def print_logs():
+    ''' prints the logs '''
+    global status_codes, total_file_size
+
+    print('File size: {:d}'.format(total_file_size))
+    for code, tally in status_codes.items():
+        if tally:
+            print('{:d}: {:d}'.format(code, tally))
+
+
+def sigint(sig, sframe):
+    ''' SIGINT handler '''
+    if count % 10:
+        print_logs()
+    signal.default_int_handler()
+    exit(0)
+
+
+def main():
+    ''' logs network requests '''
+    global count, status_codes, total_file_size
+
+    signal.signal(signal.SIGINT, sigint)
+    r = re.compile(r'(?P<ip_address>.*) - \[(?P<date>.+)\] ' +
+                   r'"GET /projects/260 HTTP/1.1" ' +
+                   r'(?P<status_code>\d+) (?P<file_size>\d+)\w*$')
+    while True:
+        count += 1
+        try:
+            match = r.match(input()).groupdict()
+            if not match:
+                continue
+        except EOFError:
+            print_logs()
+            exit(0)
+        status_code = int(match['status_code'])
+        if status_code in status_codes:
+            status_codes[status_code] += 1
+            total_file_size += int(match['file_size'])
+            if not count % 10:
+                print_logs()
+
+if __name__ == '__main__':
+    main()

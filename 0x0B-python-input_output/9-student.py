@@ -10,11 +10,6 @@ class Student:
         self.last_name = last_name
         self.age = age
 
-    def to_json(self, attrs=None):
+    def to_json(self):
         ''' return json dict of the student '''
-        if type(attrs) is list and all(type(v) is str for v in attrs):
-            return {v: self.__dict__[v] for v in self.__dict__ if v in attrs}
         return self.__dict__.copy()
-
-    def reload_from_json(self, json):
-        self.__dict__.update(json)

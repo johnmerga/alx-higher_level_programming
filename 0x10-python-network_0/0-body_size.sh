@@ -1,3 +1,3 @@
 #!/bin/bash
-# Script that shows the Content-Length from a HTTP request
-curl -sI "$1" | grep "Content-Length:" | cut -d " " -f 2
+# curl size
+curl -i $1 | grep Content-Length | tail -c 4
